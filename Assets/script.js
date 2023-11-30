@@ -1,0 +1,178 @@
+// DEPENDENCIES
+    //start button
+    var startButton = document.querySelector ("#start");
+   var questionEl = document.getElementById('question')
+   var button1El = document.getElementById ("button1");
+   var button2El = document.getElementById ("button2");
+   var button3El = document.getElementById ("button3");
+   var button4El = document.getElementById ("button4");
+   var container = document.getElementById("container")
+   container.style.display = "none";
+   var intro = document.getElementById('intro')
+   var header = document.getElementById('header')
+   var buttonEl = document.getElementsByClassName('btn')
+   console.log(buttonEl);
+   var timerEl = document.getElementById('timer')
+
+// DATA
+var questionBank = [
+    {
+        question: "Commonly used data types DO NOT include:",
+        choice1: "strings",
+        choice2: "booleans",
+        choice3: "alerts",
+        choice4: "numbers",
+        correctChoice: "alerts"
+    },
+    {
+        question: "The condition in an if/else statement is enclosed within:",
+        choice1: "quotes",
+        choice2: "curly brackets",
+        choice3: "parentheses",
+        choice4: "square brackets",
+        correctChoice: "parentheses"
+    },
+    {
+        question: "Arrays in JavaScript can be used to store:",
+        choice1: "numbers and strings",
+        choice2: "other arrays",
+        choice3: "booleans",
+        choice4: "all of the above",
+        correctChoice: "all of the above"
+    },
+    {
+        question: "String values must be enclosed within ___ when being assigned to variables.",
+        choice1: "commas",
+        choice2: "curly brackets",
+        choice3: "quotes",
+        choice4: "parentheses",
+        correctChoice: "quotes"
+    },
+    {
+    question: "A very usefull tool used during development and debugging for printing content to the debugger is:",
+    choice1: "JavaScript",
+    choice2: "terminal/bash",
+    choice3: "for loops",
+    choice4: "console.log",
+    correctChoice: "console.log"
+},
+]
+
+var timer ;
+var timerCount ;
+
+
+// var currentQuestionIndex = Math.floor(Math.random()*questionBank.length);
+var currentQuestionIndex = 0;
+var currentQuestion = questionBank[currentQuestionIndex]
+console.log (currentQuestion)
+
+// FUNCTIONS
+function startQuiz() {
+    console.log ("started")
+    intro.style.display = "none";
+    header.style.display = "none";
+  container.style.display = "block";
+renderQuestions();
+timerCount = 60;
+startTimer()
+}
+
+function renderQuestions(){
+questionEl.textContent = currentQuestion.question;
+button1El.textContent = currentQuestion.choice1;
+button2El.textContent = currentQuestion.choice2;
+button3El.textContent = currentQuestion.choice3;
+button4El.textContent = currentQuestion.choice4;
+
+}
+function startTimer(){
+   
+    timerEl.textContent = 'Time left: '+ timerCount;
+    timer = setInterval(function(){
+        timerCount--;
+        timerEl.textContent = 'Time left: '+ timerCount;
+    },1000)
+}
+
+function wrongAnswer (){
+    timerCount = timerCount - 10;
+    timerEl.textContent = 'Time left: '+ timerCount;
+   currentQuestionIndex++;
+currentQuestion = questionBank[currentQuestionIndex]
+if (currentQuestionIndex === questionBank.length){
+    gameOver()
+} else {
+renderQuestions()
+}
+}
+function correctAnswer (){
+currentQuestionIndex++;
+currentQuestion = questionBank[currentQuestionIndex]
+if (currentQuestionIndex === questionBank.length){
+    gameOver()
+} else {
+renderQuestions()
+}
+}
+
+function selectAnswer(event) {
+    
+    var clickButton = event.target
+    var content = clickButton.textContent
+    if (content === currentQuestion.correctChoice){
+  
+    correctAnswer()
+   console.log ("correct")
+} else {
+    wrongAnswer();
+    
+    console.log ("wrong")
+}
+}
+//handle end of the game
+function gameOver (){
+    // stop the timer
+    // create input for user initials
+} 
+
+function getHighScoresFromLocalStorage() {
+    // get high scores from local storage
+    var highScores = localStorage.getItem("High Scores");
+
+    // if high scores was not in local storage
+    if (!highScores) {
+        // then create a new array for high scores
+        highScores = [];
+    } else {
+        // if high scores were in local storage, parse into an array
+        highScores = JSON.parse(highScores)
+    }
+
+    return highScores;
+}
+
+function setToLocalStorage (highScore){
+    
+    var highScores = getHighScoresFromLocalStorage();
+    
+    // add new high score to high scores array
+    highScores.push(highScore)
+
+    // write new array back to local storage (as a string!)
+    localStorage.setItem("High Scores", JSON.stringify(highScores))
+}
+    // set it to the local storage - write function
+    
+
+// display highscores
+    // function to get from the local storage
+    // write 
+// USER INTERACTIONS
+startButton.addEventListener('click', startQuiz);
+
+for (i =0; i<buttonEl.length; i++){
+buttonEl[i].addEventListener('click',selectAnswer)
+}
+
+// INITIALIZATION
