@@ -17,7 +17,9 @@ var initialsEl = document.getElementById("enter-initials");
 initialsEl.style.display = "none";
 var scoreEl = document.getElementById("score");
 var submitButtonEl = document.getElementById("submit-button");
-
+var inputEl = document.getElementById("input");
+var highScoresEl = document.getElementById("high-scores");
+highScoresEl.style.display = "none";
 // DATA
 var questionBank = [
   {
@@ -135,7 +137,7 @@ function gameOver() {
   // create input for user initials
   container.style.display = "none";
   initialsEl.style.display = "block";
-    if (timerCount<=0) {
+    if (timerCount<=0) {    // <<<<<--------------------
         clearInterval(timer);
     }
   scoreEl.textContent = "Your Score is: " + timerCount;
@@ -162,20 +164,22 @@ function setToLocalStorage(highScore) {
   var highScores = getHighScoresFromLocalStorage();
 
   // add new high score to high scores array
+  highScore = timerCount;
   highScores.push(highScore);
 
   // write new array back to local storage (as a string!)
   localStorage.setItem("High Scores", JSON.stringify(highScores));
 }
-// set it to the local storage - write function
+function displayHighScoresList () {// <<<<<<<<<------------------------
+    initialsEl.style.display = "none";
+    // add name from input and score
 
-// display highscores
-// function to get from the local storage
-// write
+    inputEl.textContent = input.value;
+}
 // USER INTERACTIONS
 startButton.addEventListener("click", startQuiz);
 
 for (i = 0; i < buttonEl.length; i++) {
   buttonEl[i].addEventListener("click", checkAnswer);
 }
-submitButtonEl.addEventListener("click", setToLocalStorage);
+submitButtonEl.addEventListener("click", displayHighScoresList);
