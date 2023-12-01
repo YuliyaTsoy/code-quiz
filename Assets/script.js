@@ -11,7 +11,6 @@ container.style.display = "none";
 var intro = document.getElementById("intro");
 var header = document.getElementById("header");
 var buttonEl = document.getElementsByClassName("btn");
-console.log(buttonEl);
 var timerEl = document.getElementById("timer");
 var initialsEl = document.getElementById("enter-initials");
 initialsEl.style.display = "none";
@@ -65,11 +64,8 @@ var questionBank = [
     correctChoice: "console.log",
   },
 ];
-
 var timer;
 var timerCount;
-
-// var currentQuestionIndex = Math.floor(Math.random()*questionBank.length);
 var currentQuestionIndex = 0;
 var currentQuestion = questionBank[currentQuestionIndex];
 
@@ -132,8 +128,7 @@ function checkAnswer(event) {
 function gameOver() {
   // stop the timer
   clearInterval(timer);
-  console.log (timerCount);
-  //   alert("game over!");
+  
   // create input for user initials
   container.style.display = "none";
   initialsEl.style.display = "block";
@@ -174,11 +169,10 @@ function displayHighScoresList () {// <<<<<<<<<------------------------
     initialsEl.style.display = "none";
     // add name from input and score
 
-    inputEl.textContent = input.value;
+   // inputEl.textContent = input.value;
 }
 // USER INTERACTIONS
 startButton.addEventListener("click", startQuiz);
-
 for (i = 0; i < buttonEl.length; i++) {
   buttonEl[i].addEventListener("click", checkAnswer);
 }
