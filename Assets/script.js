@@ -1,5 +1,4 @@
 // DEPENDENCIES
-//start button
 var startButton = document.querySelector("#start");
 var questionEl = document.getElementById("question");
 var button1El = document.getElementById("button1");
@@ -19,6 +18,8 @@ var submitButtonEl = document.getElementById("submit-button");
 var inputEl = document.getElementById("input");
 var highScoresEl = document.getElementById("high-scores");
 highScoresEl.style.display = "none";
+var listItemEl = document.getElementById("list-item");
+
 // DATA
 var questionBank = [
   {
@@ -69,7 +70,9 @@ var timerCount;
 var currentQuestionIndex = 0;
 var currentQuestion = questionBank[currentQuestionIndex];
 
-// FUNCTIONS
+// Helper FUNCTIONS
+
+// gets quiz started
 function startQuiz() {
   intro.style.display = "none";
   header.style.display = "none";
@@ -78,7 +81,7 @@ function startQuiz() {
   timerCount = 60;
   startTimer();
 }
-
+// renders questions to the page
 function renderQuestions() {
   console.log(currentQuestionIndex);
   questionEl.textContent = currentQuestion.question;
@@ -87,52 +90,38 @@ function renderQuestions() {
   button3El.textContent = currentQuestion.choice3;
   button4El.textContent = currentQuestion.choice4;
 }
+//timer starts
 function startTimer() {
   timerEl.textContent = "Time left: " + timerCount;
   timer = setInterval(function () {
-    if (timerCount<=0) {
-      gameOver()
+    if (timerCount <= 0) {
+      gameOver();
     }
     timerCount--;
     timerEl.textContent = "Time left: " + timerCount;
   }, 1000);
 }
 
-// function wrongAnswer (){
-//     timerCount = timerCount - 10;
-//     timerEl.textContent = 'Time left: '+ timerCount;
-//    currentQuestionIndex++;
-// currentQuestion = questionBank[currentQuestionIndex]
-// if (currentQuestionIndex === questionBank.length || timerCount <=0){
-//     gameOver()
-// } else {
-// renderQuestions()
-// }
-// }
+// checks user's answers
 function checkAnswer(event) {
   var clickButton = event.target;
   var content = clickButton.textContent;
-  // if (currentQuestionIndex < questionBank.length) {
-  //   currentQuestion = questionBank[currentQuestionIndex];
-  // } else {
-  //   gameOver();
-  // }
+
   if (content !== currentQuestion.correctChoice) {
     timerCount = timerCount - 10;
   }
-  console.log(currentQuestionIndex)
-  console.log(questionBank.length)
-  if (currentQuestionIndex === questionBank.length-1) {
+  console.log(currentQuestionIndex);
+  console.log(questionBank.length);
+  if (currentQuestionIndex === questionBank.length - 1) {
     gameOver();
   } else {
-
     currentQuestionIndex++;
     currentQuestion = questionBank[currentQuestionIndex];
     renderQuestions();
   }
 }
 
-//handle end of the game
+// ends game
 function gameOver() {
   // stop the timer
   clearInterval(timer);
@@ -140,17 +129,18 @@ function gameOver() {
   // create input for user initials
   container.style.display = "none";
   initialsEl.style.display = "block";
+
+  //checks if the timer goes at or below zero
   if (timerCount <= 0) {
-    // <<<<<--------------------
     clearInterval(timer);
   }
   scoreEl.textContent = "Your Score is: " + timerCount;
 }
 
+// gets data from local storage:
 function getHighScoresFromLocalStorage() {
   // get high scores from local storage
   var highScores = localStorage.getItem("High Scores");
-
   // if high scores was not in local storage
   if (!highScores) {
     // then create a new array for high scores
@@ -159,40 +149,50 @@ function getHighScoresFromLocalStorage() {
     // if high scores were in local storage, parse into an array
     highScores = JSON.parse(highScores);
   }
-
   return highScores;
 }
 
+// sets data to local storage:
 function setToLocalStorage(highScore) {
   var highScores = getHighScoresFromLocalStorage();
-
-  // add new high score to high scores array
+  // adds new high score to high scores array
   var textInitials = inputEl.value;
   highScore = timerCount;
   var entry = {
     textInitials,
     highScore,
-  }
-  console.log(textInitials)
+  };
   highScores.push(entry);
 
-  // write new array back to local storage (as a string!)
+  // writes new array back to local storage (as a string!)
   localStorage.setItem("High Scores", JSON.stringify(highScores));
 }
+
+// displays high scores list after user input initials
 function displayHighScoresList() {
-  // <<<<<<<<<------------------------
-  setToLocalStorage()
+  setToLocalStorage();
   initialsEl.style.display = "none";
   highScoresEl.style.display = "block";
-  var highScoresData = getHighScoresFromLocalStorage();
-  console.log(highScoresData)
-  // add name from input and score
+  var data = getHighScoresFromLocalStorage();
+  var newList = document.createElement("ul");
 
-  // inputEl.textContent = input.value;
+  for (var i = 0; i < data.length; i++) {
+    var newListItem = document.createElement("li");
+    newListItem.textContent = data[i].textInitials + ": " + data[i].highScore;
+    newList.appendChild(newListItem);
+  }
+  highScoresEl.appendChild(newList);
 }
-// USER INTERACTIONS
+
+// USER INTERACTIONS - event listeners
+
+// starts quiz after click on Start button
 startButton.addEventListener("click", startQuiz);
+
+// after click on answer button - new question appears on the screen:
 for (i = 0; i < buttonEl.length; i++) {
   buttonEl[i].addEventListener("click", checkAnswer);
 }
+
+// after click on submit button scores are displayed
 submitButtonEl.addEventListener("click", displayHighScoresList);
