@@ -83,7 +83,6 @@ function startQuiz() {
 }
 // renders questions to the page
 function renderQuestions() {
-  console.log(currentQuestionIndex);
   questionEl.textContent = currentQuestion.question;
   button1El.textContent = currentQuestion.choice1;
   button2El.textContent = currentQuestion.choice2;
@@ -110,8 +109,7 @@ function checkAnswer(event) {
   if (content !== currentQuestion.correctChoice) {
     timerCount = timerCount - 10;
   }
-  console.log(currentQuestionIndex);
-  console.log(questionBank.length);
+
   if (currentQuestionIndex === questionBank.length - 1) {
     gameOver();
   } else {
