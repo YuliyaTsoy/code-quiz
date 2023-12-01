@@ -13,6 +13,10 @@ var header = document.getElementById("header");
 var buttonEl = document.getElementsByClassName("btn");
 console.log(buttonEl);
 var timerEl = document.getElementById("timer");
+var initialsEl = document.getElementById("enter-initials");
+initialsEl.style.display = "none";
+var scoreEl = document.getElementById("score");
+var submitButtonEl = document.getElementById("submit-button");
 
 // DATA
 var questionBank = [
@@ -106,8 +110,6 @@ function startTimer() {
 function checkAnswer(event) {
   var clickButton = event.target;
   var content = clickButton.textContent;
-
-  //   console.log(currentQuestionIndex);
   if (currentQuestionIndex < questionBank.length) {
     currentQuestion = questionBank[currentQuestionIndex];
   } else {
@@ -119,8 +121,8 @@ function checkAnswer(event) {
   if (currentQuestionIndex == questionBank.length || timerCount <= 0) {
     gameOver();
   } else {
-    renderQuestions();
-    currentQuestionIndex++;
+      renderQuestions();
+      currentQuestionIndex++;
   }
 }
 
@@ -128,8 +130,16 @@ function checkAnswer(event) {
 function gameOver() {
   // stop the timer
   clearInterval(timer);
+  console.log (timerCount);
   //   alert("game over!");
   // create input for user initials
+  container.style.display = "none";
+  initialsEl.style.display = "block";
+    if (timerCount<=0) {
+        clearInterval(timer);
+    }
+  scoreEl.textContent = "Your Score is: " + timerCount;
+
 }
 
 function getHighScoresFromLocalStorage() {
@@ -143,7 +153,6 @@ function getHighScoresFromLocalStorage() {
   } else {
     // if high scores were in local storage, parse into an array
     highScores = JSON.parse(highScores);
-
   }
 
   return highScores;
@@ -169,5 +178,4 @@ startButton.addEventListener("click", startQuiz);
 for (i = 0; i < buttonEl.length; i++) {
   buttonEl[i].addEventListener("click", checkAnswer);
 }
-
-
+submitButtonEl.addEventListener("click", setToLocalStorage);
