@@ -80,6 +80,7 @@ function startQuiz() {
 }
 
 function renderQuestions() {
+  console.log(currentQuestionIndex);
   questionEl.textContent = currentQuestion.question;
   button1El.textContent = currentQuestion.choice1;
   button2El.textContent = currentQuestion.choice2;
@@ -89,6 +90,9 @@ function renderQuestions() {
 function startTimer() {
   timerEl.textContent = "Time left: " + timerCount;
   timer = setInterval(function () {
+    if (timerCount<=0) {
+      gameOver()
+    }
     timerCount--;
     timerEl.textContent = "Time left: " + timerCount;
   }, 1000);
@@ -108,19 +112,23 @@ function startTimer() {
 function checkAnswer(event) {
   var clickButton = event.target;
   var content = clickButton.textContent;
-  if (currentQuestionIndex < questionBank.length) {
-    currentQuestion = questionBank[currentQuestionIndex];
-  } else {
-    gameOver();
-  }
+  // if (currentQuestionIndex < questionBank.length) {
+  //   currentQuestion = questionBank[currentQuestionIndex];
+  // } else {
+  //   gameOver();
+  // }
   if (content !== currentQuestion.correctChoice) {
     timerCount = timerCount - 10;
   }
-  if (currentQuestionIndex == questionBank.length || timerCount <= 0) {
+  console.log(currentQuestionIndex)
+  console.log(questionBank.length)
+  if (currentQuestionIndex === questionBank.length-1) {
     gameOver();
   } else {
-      renderQuestions();
-      currentQuestionIndex++;
+
+    currentQuestionIndex++;
+    currentQuestion = questionBank[currentQuestionIndex];
+    renderQuestions();
   }
 }
 
@@ -128,15 +136,15 @@ function checkAnswer(event) {
 function gameOver() {
   // stop the timer
   clearInterval(timer);
-  
+
   // create input for user initials
   container.style.display = "none";
   initialsEl.style.display = "block";
-    if (timerCount<=0) {    // <<<<<--------------------
-        clearInterval(timer);
-    }
+  if (timerCount <= 0) {
+    // <<<<<--------------------
+    clearInterval(timer);
+  }
   scoreEl.textContent = "Your Score is: " + timerCount;
-
 }
 
 function getHighScoresFromLocalStorage() {
@@ -159,17 +167,28 @@ function setToLocalStorage(highScore) {
   var highScores = getHighScoresFromLocalStorage();
 
   // add new high score to high scores array
+  var textInitials = inputEl.value;
   highScore = timerCount;
-  highScores.push(highScore);
+  var entry = {
+    textInitials,
+    highScore,
+  }
+  console.log(textInitials)
+  highScores.push(entry);
 
   // write new array back to local storage (as a string!)
   localStorage.setItem("High Scores", JSON.stringify(highScores));
 }
-function displayHighScoresList () {// <<<<<<<<<------------------------
-    initialsEl.style.display = "none";
-    // add name from input and score
+function displayHighScoresList() {
+  // <<<<<<<<<------------------------
+  setToLocalStorage()
+  initialsEl.style.display = "none";
+  highScoresEl.style.display = "block";
+  var highScoresData = getHighScoresFromLocalStorage();
+  console.log(highScoresData)
+  // add name from input and score
 
-   // inputEl.textContent = input.value;
+  // inputEl.textContent = input.value;
 }
 // USER INTERACTIONS
 startButton.addEventListener("click", startQuiz);
