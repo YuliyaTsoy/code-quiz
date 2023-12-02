@@ -165,6 +165,10 @@ function setToLocalStorage(highScore) {
   // writes new array back to local storage (as a string!)
   localStorage.setItem("High Scores", JSON.stringify(highScores));
 }
+// function returning to the home page:
+function goHome() {
+  window.location.href = "../index.html";
+}
 
 // displays high scores list after user input initials
 function displayHighScoresList() {
@@ -180,6 +184,13 @@ function displayHighScoresList() {
     newList.appendChild(newListItem);
   }
   highScoresEl.appendChild(newList);
+
+  // adds Go Back Button that returns to the home screen on click
+  var goBackBtn = document.createElement("button");
+  goBackBtn.textContent = "Go Back";
+  highScoresEl.appendChild(goBackBtn);
+  goBackBtn.addEventListener("click", goHome);
+ 
 }
 
 // USER INTERACTIONS - event listeners
