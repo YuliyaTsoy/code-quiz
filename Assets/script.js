@@ -190,7 +190,17 @@ function displayHighScoresList() {
   goBackBtn.textContent = "Go Back";
   highScoresEl.appendChild(goBackBtn);
   goBackBtn.addEventListener("click", goHome);
- 
+
+  // function clearing local storage
+  function clearLocalStorage() {
+    localStorage.clear();
+    newList.style.display = "none";
+  }
+  // adds Clear Scores button
+  var clearHighScoresBtn = document.createElement("button");
+  clearHighScoresBtn.textContent = "Clear High Scores";
+  highScoresEl.appendChild(clearHighScoresBtn);
+  clearHighScoresBtn.addEventListener("click", clearLocalStorage);
 }
 
 // USER INTERACTIONS - event listeners
